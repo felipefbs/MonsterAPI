@@ -53,7 +53,20 @@
 
 This application, when ready, performs Creation, Reading, Update and Delete in a database based on the monsters from RPG book [Dungeon World](https://dungeon-world.com/). The development of this application is intended to help me learn the [Go language](https://golang.org/). Along with the development, I will log how it was to develop this application on a [Notion](https://notion.so) page. 
 
+### Development Todo
 
+- [ ]  Fazer um Hello World no " / "
+- [ ]  adicionar uma nova Rota(controller)
+- [ ]  Adicionar o padrão MVC
+- [ ]  Configurar variáveis de ambiente
+- [ ]  Fazer todas as rotas para o CRUD
+- [ ]  Salvar as informações em um banco de dados - MongoDB
+  - [ ]  (opcional) Utilizar o CloudAtlas MongoDB
+- [ ]  Fazer rodar no Docker
+    - [ ]  Criar um arquivo dockfile para a aplicação
+    - [ ]  Instalar o docker-compose
+    - [ ]  Criar um docker-compose file
+    - [ ]  (opcional) Criar um makefile para facilitar os comando
 
 ## :memo: License
 
