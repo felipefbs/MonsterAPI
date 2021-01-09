@@ -22,6 +22,12 @@
   <a href="https://www.codefactor.io/repository/github/felipefbs/MonsterAPI" alt="CodeFactor">
     <img src="https://www.codefactor.io/repository/github/felipefbs/MonsterAPI/badge" />
   </a>
+
+  <a href="https://goreportcard.com/badge/github.com/felipefbs/MonsterAPI" alt="GoReportCard">
+    <img src="https://goreportcard.com/badge/github.com/felipefbs/MonsterAPI" />
+  </a>
+  
+  
   <br/>
 
   <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/felipefbs/MonsterAPI?color=blue">
@@ -51,22 +57,21 @@
 
 ## :clipboard: Description
 
-This application, when ready, performs Creation, Reading, Update and Delete in a database based on the monsters from RPG book [Dungeon World](https://dungeon-world.com/). The development of this application is intended to help me learn the [Go language](https://golang.org/). Along with the development, I will log how it was to develop this application on a [Notion](https://notion.so) page. 
+This application, when ready, performs Creation, Reading, Update and Delete in a database based on the monsters from RPG book [Dungeon World](https://dungeon-world.com/). The development of this application is intended to help me learn the [Go language](https://golang.org/).
 
 ### Development Todo
 
-- [ ]  Fazer um Hello World no " / "
-- [ ]  adicionar uma nova Rota(controller)
-- [ ]  Adicionar o padrão MVC
-- [ ]  Configurar variáveis de ambiente
-- [ ]  Fazer todas as rotas para o CRUD
-- [ ]  Salvar as informações em um banco de dados - MongoDB
-  - [ ]  (opcional) Utilizar o CloudAtlas MongoDB
-- [ ]  Fazer rodar no Docker
-    - [ ]  Criar um arquivo dockfile para a aplicação
-    - [ ]  Instalar o docker-compose
-    - [ ]  Criar um docker-compose file
-    - [ ]  (opcional) Criar um makefile para facilitar os comando
+- [X]  Hello World at " / " endpoint
+- [X]  Add new routes to "/monsters" endpoint (controller)
+- [X]  Add MVC Pattern (halfway!)
+- [ ]  Configure environment variables
+- [ ]  CRUD operations
+- [X]  Save data in a database - MongoDB
+  - [ ]  (optional) Use CloudAtlas MongoDB
+- [ ]  Dockerize it
+    - [ ]  Create dockerfile
+    - [ ]  docker-compose
+    - [ ]  Create docker-compose file
 
 ## :memo: License
 
