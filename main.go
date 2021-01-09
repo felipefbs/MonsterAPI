@@ -10,6 +10,7 @@ func main() {
 
 	api := Router.Group("/api/v1")
 	{
+		api.GET("/", controllers.GetAllMonsters)
 		api.POST("/", controllers.CreateMonster)
 	}
 
