@@ -13,13 +13,13 @@ import (
 
 // GetAllMonsters function returns every monsters in database
 func GetAllMonsters(c *gin.Context) {
-	monsterCtx, monsterCollection := models.ConnectDatabase()
+	monsterCtx, monsterCollection := models.ConnectDatabase(c)
 
 	var monsters []*models.Monster
 
 	cur, err := monsterCollection.Find(monsterCtx, bson.D{{}})
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -27,7 +27,7 @@ func GetAllMonsters(c *gin.Context) {
 		var m models.Monster
 		err := cur.Decode(&m)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err})
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
@@ -35,14 +35,14 @@ func GetAllMonsters(c *gin.Context) {
 	}
 
 	if err := cur.Err(); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	cur.Close(monsterCtx)
 
 	if len(monsters) == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": mongo.ErrNoDocuments})
+		c.JSON(http.StatusBadRequest, gin.H{"error": mongo.ErrNoDocuments.Error()})
 		return
 	}
 
@@ -51,7 +51,7 @@ func GetAllMonsters(c *gin.Context) {
 
 // CreateMonster function
 func CreateMonster(c *gin.Context) {
-	monsterCtx, monsterCollection := models.ConnectDatabase()
+	monsterCtx, monsterCollection := models.ConnectDatabase(c)
 	var input models.Monster
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
