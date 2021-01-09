@@ -6,9 +6,17 @@ import (
 
 	"github.com/felipefbs/MonsterAPI/models"
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
+
+// GetAllMonsters function returns every monsters in database
+func GetAllMonsters(c *gin.Context) {
+	filter := bson.D{{}}
+
+	filterMonsters(filter, c)
+}
 
 // filterMonster function returns to client a monster slice based on a filter
 func filterMonsters(filter interface{}, c *gin.Context) {
