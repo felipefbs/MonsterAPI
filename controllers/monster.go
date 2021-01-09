@@ -2,10 +2,12 @@ package controllers
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/felipefbs/MonsterAPI/models"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -56,7 +58,23 @@ func CreateMonster(c *gin.Context) {
 		return
 	}
 
-	monster := models.Monster{Name: input.Name, Area: input.Area}
+	monster := models.Monster{
+		ID:             primitive.NewObjectID(),
+		CreatedAt:      time.Now(),
+		Name:           input.Name,
+		Moves:          input.Moves,
+		Instinct:       input.Instinct,
+		Description:    input.Description,
+		Attack:         input.Attack,
+		AttackTags:     input.AttackTags,
+		MonsterTags:    input.MonsterTags,
+		Damage:         input.Damage,
+		HP:             input.HP,
+		Armor:          input.Armor,
+		SpecialQuality: input.SpecialQuality,
+		Setting:        input.Setting,
+		Source:         input.Source,
+	}
 
 	_, err := monsterCollection.InsertOne(monsterCtx, monster)
 	if err != nil {
