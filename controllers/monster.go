@@ -20,7 +20,8 @@ func GetAllMonsters(c *gin.Context) {
 
 // filterMonster function returns to client a monster slice based on a filter
 func filterMonsters(filter interface{}, c *gin.Context) {
-	monsterCtx, monsterCollection := models.ConnectDatabase(c)
+	monsterCtx, monsterCollection, cancel := models.ConnectDatabase(c)
+	defer cancel()
 
 	var monsters []*models.Monster
 
@@ -58,7 +59,9 @@ func filterMonsters(filter interface{}, c *gin.Context) {
 
 // CreateMonster function
 func CreateMonster(c *gin.Context) {
-	monsterCtx, monsterCollection := models.ConnectDatabase(c)
+	monsterCtx, monsterCollection, cancel := models.ConnectDatabase(c)
+	defer cancel()
+
 	var input models.Monster
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
