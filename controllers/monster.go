@@ -16,52 +16,59 @@ import (
 func GetAllMonsters(c *gin.Context) {
 	filter := bson.D{{}}
 
-	filterMonsters(filter, c)
-}
-
-// filterMonster function returns to client a monster slice based on a filter
-func filterMonsters(filter interface{}, c *gin.Context) {
-	monsterCtx, monsterCollection, cancel := models.ConnectDatabase(c)
-	defer cancel()
-
-	var monsters []*models.Monster
-
-	cur, err := monsterCollection.Find(monsterCtx, filter)
+	monsters, err := filterMonsters(filter)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	for cur.Next(monsterCtx) {
-		var m models.Monster
-		err := cur.Decode(&m)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-
-		monsters = append(monsters, &m)
-	}
-
-	if err := cur.Err(); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	cur.Close(monsterCtx)
-
-	if len(monsters) == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": mongo.ErrNoDocuments.Error()})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": monsters})
 }
 
+// filterMonster function returns to client a monster slice based on a filter
+func filterMonsters(filter interface{}) (monsters []models.Monster, err error) {
+	monsterCtx, monsterCollection, cancel, err := models.ConnectDatabase()
+	defer cancel()
+	if err != nil {
+		return
+	}
+
+	cur, err := monsterCollection.Find(monsterCtx, filter)
+	if err != nil {
+		return
+	}
+
+	for cur.Next(monsterCtx) {
+		var m models.Monster
+		err = cur.Decode(&m)
+		if err != nil {
+			return
+		}
+		monsters = append(monsters, m)
+	}
+
+	if err = cur.Err(); err != nil {
+		return
+	}
+
+	cur.Close(monsterCtx)
+
+	if len(monsters) == 0 {
+		err = mongo.ErrNoDocuments
+		return
+	}
+
+	return monsters, nil
+}
+
 // CreateMonster function
 func CreateMonster(c *gin.Context) {
-	monsterCtx, monsterCollection, cancel := models.ConnectDatabase(c)
+	monsterCtx, monsterCollection, cancel, err := models.ConnectDatabase()
 	defer cancel()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	var input []models.Monster
 	if err := c.ShouldBindJSON(&input); err != nil {
