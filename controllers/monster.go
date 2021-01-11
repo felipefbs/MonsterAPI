@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"context"
 	"net/http"
 	"time"
 
@@ -62,35 +63,45 @@ func CreateMonster(c *gin.Context) {
 	monsterCtx, monsterCollection, cancel := models.ConnectDatabase(c)
 	defer cancel()
 
-	var input models.Monster
+	var input []models.Monster
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	var mSlice []models.Monster
+	for _, monster := range input {
+		m, err := insertMonster(monsterCtx, monsterCollection, monster)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		mSlice = append(mSlice, m)
 
-	monster := models.Monster{
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": mSlice})
+}
+
+func insertMonster(ctx context.Context, collection *mongo.Collection, monster models.Monster) (models.Monster, error) {
+	monster = models.Monster{
 		ID:               primitive.NewObjectID(),
 		CreatedAt:        time.Now(),
-		Name:             input.Name,
-		Moves:            input.Moves,
-		Instinct:         input.Instinct,
-		Description:      input.Description,
-		Attack:           input.Attack,
-		AttackTags:       input.AttackTags,
-		MonsterTags:      input.MonsterTags,
-		Damage:           input.Damage,
-		HP:               input.HP,
-		Armor:            input.Armor,
-		SpecialQualities: input.SpecialQualities,
-		Setting:          input.Setting,
-		Source:           input.Source,
+		Name:             monster.Name,
+		Moves:            monster.Moves,
+		Instinct:         monster.Instinct,
+		Description:      monster.Description,
+		Attack:           monster.Attack,
+		AttackTags:       monster.AttackTags,
+		MonsterTags:      monster.MonsterTags,
+		Damage:           monster.Damage,
+		HP:               monster.HP,
+		Armor:            monster.Armor,
+		SpecialQualities: monster.SpecialQualities,
+		Setting:          monster.Setting,
+		Source:           monster.Source,
 	}
 
-	_, err := monsterCollection.InsertOne(monsterCtx, monster)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+	_, err := collection.InsertOne(ctx, monster)
 
-	c.JSON(http.StatusOK, gin.H{"data": monster})
+	return monster, err
 }
