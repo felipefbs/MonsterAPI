@@ -69,21 +69,21 @@ func CreateMonster(c *gin.Context) {
 	}
 
 	monster := models.Monster{
-		ID:             primitive.NewObjectID(),
-		CreatedAt:      time.Now(),
-		Name:           input.Name,
-		Moves:          input.Moves,
-		Instinct:       input.Instinct,
-		Description:    input.Description,
-		Attack:         input.Attack,
-		AttackTags:     input.AttackTags,
-		MonsterTags:    input.MonsterTags,
-		Damage:         input.Damage,
-		HP:             input.HP,
-		Armor:          input.Armor,
-		SpecialQuality: input.SpecialQuality,
-		Setting:        input.Setting,
-		Source:         input.Source,
+		ID:               primitive.NewObjectID(),
+		CreatedAt:        time.Now(),
+		Name:             input.Name,
+		Moves:            input.Moves,
+		Instinct:         input.Instinct,
+		Description:      input.Description,
+		Attack:           input.Attack,
+		AttackTags:       input.AttackTags,
+		MonsterTags:      input.MonsterTags,
+		Damage:           input.Damage,
+		HP:               input.HP,
+		Armor:            input.Armor,
+		SpecialQualities: input.SpecialQualities,
+		Setting:          input.Setting,
+		Source:           input.Source,
 	}
 
 	_, err := monsterCollection.InsertOne(monsterCtx, monster)
