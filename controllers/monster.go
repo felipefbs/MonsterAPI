@@ -29,16 +29,18 @@ func GetAllMonsters(c *gin.Context) {
 // GetMonstersBySetting returns all monsters from a specific setting
 func GetMonstersBySetting(c *gin.Context) {
 	s := c.Param("setting")
-	t := c.Query("attack_tags")
+	a := c.Query("attack_tags")
+	m := c.Query("monster_tags")
 
-	attackTags := strings.Split(t, ",")
 	filter := bson.M{
-		"setting":     s,
-		"attack_tags": bson.M{"$in": attackTags},
+		"setting": s,
 	}
 
-	if t == "" {
-		filter = bson.M{"setting": s}
+	if a != "" {
+		filter["attack_tags"] = bson.M{"$in": strings.Split(a, ",")}
+	}
+	if m != "" {
+		filter["monster_tags"] = bson.M{"$in": strings.Split(m, ",")}
 	}
 
 	monsters, err := filterMonsters(filter)
