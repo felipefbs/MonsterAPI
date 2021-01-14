@@ -3,6 +3,7 @@ package controllers
 import (
 	"context"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/felipefbs/MonsterAPI/models"
@@ -27,12 +28,14 @@ func GetAllMonsters(c *gin.Context) {
 
 // GetMonstersBySetting returns all monsters from a specific setting
 func GetMonstersBySetting(c *gin.Context) {
-	var attackTags []string
 	s := c.Param("setting")
 	t := c.Query("attack_tags")
 
-	attackTags = []string{t}
-	filter := bson.M{"setting": s, "attack_tags": attackTags}
+	attackTags := strings.Split(t, ",")
+	filter := bson.M{
+		"setting":     s,
+		"attack_tags": bson.M{"$in": attackTags},
+	}
 
 	if t == "" {
 		filter = bson.M{"setting": s}
