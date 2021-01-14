@@ -27,8 +27,16 @@ func GetAllMonsters(c *gin.Context) {
 
 // GetMonstersBySetting returns all monsters from a specific setting
 func GetMonstersBySetting(c *gin.Context) {
+	var attackTags []string
 	s := c.Param("setting")
-	filter := bson.M{"setting": s}
+	t := c.Query("attack_tags")
+
+	attackTags = []string{t}
+	filter := bson.M{"setting": s, "attack_tags": attackTags}
+
+	if t == "" {
+		filter = bson.M{"setting": s}
+	}
 
 	monsters, err := filterMonsters(filter)
 	if err != nil {
@@ -36,7 +44,7 @@ func GetMonstersBySetting(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": monsters})
+	c.JSON(http.StatusOK, gin.H{"numberOfItens": len(monsters), "data": monsters})
 }
 
 // filterMonster function returns to client a monster slice based on a filter
