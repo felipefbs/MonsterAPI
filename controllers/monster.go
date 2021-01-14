@@ -37,10 +37,10 @@ func GetMonstersBySetting(c *gin.Context) {
 	}
 
 	if a != "" {
-		filter["attack_tags"] = bson.M{"$in": strings.Split(a, ",")}
+		filter["attack_tags"] = bson.M{"$in": toLowerCase(strings.Split(a, ","))}
 	}
 	if m != "" {
-		filter["monster_tags"] = bson.M{"$in": strings.Split(m, ",")}
+		filter["monster_tags"] = bson.M{"$in": toLowerCase(strings.Split(m, ","))}
 	}
 
 	monsters, err := filterMonsters(filter)
@@ -120,19 +120,19 @@ func insertMonster(ctx context.Context, collection *mongo.Collection, monster mo
 	monster = models.Monster{
 		ID:               primitive.NewObjectID(),
 		CreatedAt:        time.Now(),
-		Name:             monster.Name,
-		Moves:            monster.Moves,
-		Instinct:         monster.Instinct,
-		Description:      monster.Description,
-		Attack:           monster.Attack,
-		AttackTags:       monster.AttackTags,
-		MonsterTags:      monster.MonsterTags,
-		Damage:           monster.Damage,
+		Name:             strings.TrimSpace(monster.Name),
+		Moves:            toLowerCase(monster.Moves),
+		Instinct:         strings.TrimSpace(monster.Instinct),
+		Description:      strings.TrimSpace(monster.Description),
+		Attack:           strings.TrimSpace(monster.Attack),
+		AttackTags:       toLowerCase(monster.AttackTags),
+		MonsterTags:      toLowerCase(monster.MonsterTags),
+		Damage:           strings.TrimSpace(monster.Damage),
 		HP:               monster.HP,
 		Armor:            monster.Armor,
-		SpecialQualities: monster.SpecialQualities,
-		Setting:          monster.Setting,
-		Source:           monster.Source,
+		SpecialQualities: toLowerCase(monster.SpecialQualities),
+		Setting:          strings.TrimSpace(monster.Setting),
+		Source:           strings.TrimSpace(monster.Source),
 	}
 
 	_, err := collection.InsertOne(ctx, monster)
@@ -140,6 +140,10 @@ func insertMonster(ctx context.Context, collection *mongo.Collection, monster mo
 	return monster, err
 }
 
-func toLoweCas(s interface{}) {
-
+func toLowerCase(s []string) []string {
+	var aux []string
+	for _, v := range s {
+		aux = append(aux, strings.ToLower(strings.TrimSpace(v)))
+	}
+	return aux
 }
