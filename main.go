@@ -16,6 +16,7 @@ func main() {
 			c.JSON(http.StatusOK, gin.H{"message": "Hello, Monster!"})
 		})
 		api.GET("/monsters", controllers.GetAllMonsters)
+		api.GET("/monsters/:setting", controllers.GetMonstersBySetting)
 		api.POST("/monsters", controllers.CreateMonster)
 	}
 

@@ -25,6 +25,20 @@ func GetAllMonsters(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": monsters})
 }
 
+// GetMonstersBySetting returns all monsters from a specific setting
+func GetMonstersBySetting(c *gin.Context) {
+	s := c.Param("setting")
+	filter := bson.M{"setting": s}
+
+	monsters, err := filterMonsters(filter)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": monsters})
+}
+
 // filterMonster function returns to client a monster slice based on a filter
 func filterMonsters(filter interface{}) (monsters []models.Monster, err error) {
 	monsterCtx, monsterCollection, cancel, err := models.ConnectDatabase()
@@ -111,4 +125,8 @@ func insertMonster(ctx context.Context, collection *mongo.Collection, monster mo
 	_, err := collection.InsertOne(ctx, monster)
 
 	return monster, err
+}
+
+func toLoweCas(s interface{}) {
+
 }
