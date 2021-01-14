@@ -15,7 +15,17 @@ import (
 
 // GetAllMonsters function returns every monsters in database
 func GetAllMonsters(c *gin.Context) {
-	filter := bson.D{{}}
+	filter := bson.M{}
+
+	a := c.Query("attack_tags")
+	m := c.Query("monster_tags")
+
+	if a != "" {
+		filter["attack_tags"] = bson.M{"$in": toLowerCase(strings.Split(a, ","))}
+	}
+	if m != "" {
+		filter["monster_tags"] = bson.M{"$in": toLowerCase(strings.Split(m, ","))}
+	}
 
 	monsters, err := filterMonsters(filter)
 	if err != nil {
@@ -23,7 +33,7 @@ func GetAllMonsters(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": monsters})
+	c.JSON(http.StatusOK, gin.H{"numberOfItens": len(monsters), "data": monsters})
 }
 
 // GetMonstersBySetting returns all monsters from a specific setting
