@@ -19,12 +19,16 @@ func GetAllMonsters(c *gin.Context) {
 
 	a := c.Query("attack_tags")
 	m := c.Query("monster_tags")
+	n := c.Query("name")
 
 	if a != "" {
 		filter["attack_tags"] = bson.M{"$in": toLowerCase(strings.Split(a, ","))}
 	}
 	if m != "" {
 		filter["monster_tags"] = bson.M{"$in": toLowerCase(strings.Split(m, ","))}
+	}
+	if n != "" {
+		filter["name"] = strings.ToLower(n)
 	}
 
 	monsters, err := filterMonsters(filter)
@@ -51,6 +55,23 @@ func GetMonstersBySetting(c *gin.Context) {
 	}
 	if m != "" {
 		filter["monster_tags"] = bson.M{"$in": toLowerCase(strings.Split(m, ","))}
+	}
+
+	monsters, err := filterMonsters(filter)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"numberOfItens": len(monsters), "data": monsters})
+}
+
+func GetMonstersByName(c *gin.Context) {
+	n := c.Param("name")
+	name := strings.ToLower(n)
+
+	filter := bson.M{
+		"name": name,
 	}
 
 	monsters, err := filterMonsters(filter)
@@ -130,7 +151,7 @@ func insertMonster(ctx context.Context, collection *mongo.Collection, monster mo
 	monster = models.Monster{
 		ID:               primitive.NewObjectID(),
 		CreatedAt:        time.Now(),
-		Name:             strings.TrimSpace(monster.Name),
+		Name:             strings.ToLower(strings.TrimSpace(monster.Name)),
 		Moves:            toLowerCase(monster.Moves),
 		Instinct:         strings.TrimSpace(monster.Instinct),
 		Description:      strings.TrimSpace(monster.Description),
