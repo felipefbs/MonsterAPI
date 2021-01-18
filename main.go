@@ -21,6 +21,7 @@ func main() {
 		api.GET("/monsters", controllers.GetAllMonsters)
 		api.GET("/monsters/:setting", controllers.GetMonstersBySetting)
 		api.POST("/monsters", controllers.CreateMonster)
+		api.PUT("/monsters/:name", controllers.UpdateMonster)
 	}
 
 	Router.Run()

@@ -178,3 +178,58 @@ func toLowerCase(s []string) []string {
 	}
 	return aux
 }
+
+// UpdateMonster function handler changes some monster properties based on it name
+func UpdateMonster(c *gin.Context) {
+	var input models.Monster
+	n := strings.ToLower(c.Param("name"))
+
+	monsterCtx, monsterCollection, cancel, err := models.ConnectDatabase()
+	defer cancel()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	monster, err := filterMonsters(bson.M{"name": n})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	if monster[0].Source == "core rulebook" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "You cannot change Monsters from core rulebook"})
+		return
+	}
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	monsterUpdate := bson.M{
+		"name":              input.Name,
+		"moves":             input.Moves,
+		"instinct":          input.Instinct,
+		"description":       input.Description,
+		"attack":            input.Attack,
+		"attack_tags":       input.AttackTags,
+		"damage":            input.Damage,
+		"monster_tags":      input.MonsterTags,
+		"hp":                input.HP,
+		"armor":             input.Armor,
+		"special_qualities": input.SpecialQualities,
+		"setting":           input.Setting,
+		"source":            input.Source,
+	}
+
+	update := bson.M{"$set": monsterUpdate}
+
+	monsterCollection.FindOneAndUpdate(
+		monsterCtx,
+		bson.M{"name": n},
+		update,
+	)
+
+	c.JSON(http.StatusOK, gin.H{"data": monsterUpdate})
+
+}
