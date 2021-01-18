@@ -28,3 +28,4 @@
 ### Air Live Reload ###
 .air.toml
 tmp/
+.env
