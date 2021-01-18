@@ -5,10 +5,13 @@ import (
 
 	"github.com/felipefbs/MonsterAPI/controllers"
 	"github.com/gin-gonic/gin"
+	"github.com/thinkerou/favicon"
 )
 
 func main() {
 	Router := gin.Default()
+
+	Router.Use(favicon.New("./assets/favicon.ico"))
 
 	api := Router.Group("/api/v1")
 	{
