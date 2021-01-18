@@ -66,6 +66,7 @@ func GetMonstersBySetting(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"numberOfItens": len(monsters), "data": monsters})
 }
 
+// GetMonstersByName function handler returns a monster based on it name
 func GetMonstersByName(c *gin.Context) {
 	n := c.Param("name")
 	name := strings.ToLower(n)
@@ -80,7 +81,7 @@ func GetMonstersByName(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"numberOfItens": len(monsters), "data": monsters})
+	c.JSON(http.StatusOK, gin.H{"data": monsters[0]})
 }
 
 // filterMonster function returns to client a monster slice based on a filter
