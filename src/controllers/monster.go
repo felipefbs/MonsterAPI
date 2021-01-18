@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/felipefbs/MonsterAPI/models"
+	"github.com/felipefbs/MonsterAPI/src/models"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"

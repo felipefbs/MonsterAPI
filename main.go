@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/felipefbs/MonsterAPI/controllers"
+	"github.com/felipefbs/MonsterAPI/src/controllers"
 	"github.com/gin-gonic/gin"
 	"github.com/thinkerou/favicon"
 )
