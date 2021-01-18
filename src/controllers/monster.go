@@ -225,11 +225,15 @@ func UpdateMonster(c *gin.Context) {
 
 	update := bson.M{"$set": monsterUpdate}
 
-	monsterCollection.FindOneAndUpdate(
+	m := monsterCollection.FindOneAndUpdate(
 		monsterCtx,
 		bson.M{"name": n},
 		update,
 	)
+	if m.Err() != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": m.Err().Error()})
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{"data": monsterUpdate})
 
