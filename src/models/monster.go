@@ -14,7 +14,7 @@ type Monster struct {
 	Moves            []string           `bson:"moves" json:"moves"`
 	Instinct         string             `bson:"instinct" json:"instinct"`
 	Description      string             `bson:"description" json:"description"`
-	Attack           string             `bson:"attacker" json:"attack"`
+	Attack           string             `bson:"attack" json:"attack"`
 	AttackTags       []string           `bson:"attack_tags" json:"attack_tags"`
 	Damage           string             `bson:"damage" json:"damage"`
 	MonsterTags      []string           `bson:"monster_tags" json:"monster_tags"`
