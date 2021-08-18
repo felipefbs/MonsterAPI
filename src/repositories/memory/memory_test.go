@@ -7,6 +7,7 @@ import (
 	"github.com/felipefbs/MonsterAPI/src/entities"
 	"github.com/felipefbs/MonsterAPI/src/repositories/memory"
 	"github.com/google/uuid"
+	"github.com/kylelemons/godebug/pretty"
 )
 
 var (
@@ -40,22 +41,24 @@ func TestGetByID(t *testing.T) {
 
 	err := repo.Store(monster)
 	if err != nil {
-		t.Error("Erro na criação do monstro")
+		t.Error("Create monster failed", err.Error())
 	}
 
 	want := monster
 	got, err := repo.GetByID(monster.ID)
 	if err != nil {
-		t.Error("Erro get do monstro")
+		t.Error("Get monster failed", err.Error())
 	}
 
 	err = repo.DeleteByID(monster.ID)
 	if err != nil {
-		t.Error("Erro get do monstro")
+		t.Error("Delete monster failed", err.Error())
 	}
 
 	if want != got {
-		t.Error("monster fail")
+		diff := pretty.Compare(want, got)
+		t.Error("Test failed")
+		pretty.Print(diff)
 	}
 }
 
@@ -85,21 +88,23 @@ func TestGetByName(t *testing.T) {
 
 	err := repo.Store(monster)
 	if err != nil {
-		t.Error("Erro na criação do monstro")
+		t.Error("Create monster failed", err.Error())
 	}
 
 	want := monster
 	got, err := repo.GetByName(monster.Name)
 	if err != nil {
-		t.Error("Erro get do monstro")
+		t.Error("Get monster failed", err.Error())
 	}
 
 	err = repo.DeleteByName(monster.Name)
 	if err != nil {
-		t.Error("Erro get do monstro")
+		t.Error("Delete monster failed", err.Error())
 	}
 
 	if want != got {
-		t.Error("monster fail")
+		diff := pretty.Compare(want, got)
+		t.Error("Test failed")
+		pretty.Print(diff)
 	}
 }
