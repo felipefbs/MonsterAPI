@@ -18,6 +18,12 @@ func (r *memoryRepository) GetByID(id uuid.UUID) (*entities.Monster, error) {
 }
 
 func (r *memoryRepository) GetByName(name string) (*entities.Monster, error) {
+	for _, v := range r.database {
+		if v.Name == name {
+			return v, nil
+		}
+	}
+
 	return nil, nil
 }
 
@@ -59,5 +65,6 @@ func (r *memoryRepository) DeleteByName(name string) error {
 			r.DeleteByID(v.ID)
 		}
 	}
+
 	return nil
 }
