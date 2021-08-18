@@ -8,21 +8,21 @@ import (
 
 // Monster definition
 type Monster struct {
-	ID               uuid.UUID `bson:"_id" json:"_id"`
-	CreatedAt        time.Time `bson:"createdAt" json:"createdAt"`
-	Name             string    `bson:"name" json:"name"`
-	Moves            []string  `bson:"moves" json:"moves"`
-	Instinct         string    `bson:"instinct" json:"instinct"`
-	Description      string    `bson:"description" json:"description"`
-	Attack           string    `bson:"attack" json:"attack"`
-	AttackTags       []string  `bson:"attack_tags" json:"attack_tags"`
-	Damage           string    `bson:"damage" json:"damage"`
-	MonsterTags      []string  `bson:"monster_tags" json:"monster_tags"`
-	HP               int32     `bson:"hp" json:"hp"`
-	Armor            int32     `bson:"armor" json:"armor"`
-	SpecialQualities []string  `bson:"special_qualities" json:"special_qualities"`
-	Setting          string    `bson:"setting" json:"setting"`
-	Source           string    `bson:"source" json:"source"`
+	ID               uuid.UUID `json:"_id"`
+	CreatedAt        time.Time `json:"createdAt"`
+	Name             string    `json:"name"`
+	Moves            []string  `json:"moves"`
+	Instinct         string    `json:"instinct"`
+	Description      string    `json:"description"`
+	Attack           string    `json:"attack"`
+	AttackTags       []string  `json:"attack_tags"`
+	Damage           string    `json:"damage"`
+	MonsterTags      []string  `json:"monster_tags"`
+	HP               int32     `json:"hp"`
+	Armor            int32     `json:"armor"`
+	SpecialQualities []string  `json:"special_qualities"`
+	Setting          string    `json:"setting"`
+	Source           string    `json:"source"`
 }
 
 type MonsterUseCaseInterface interface {
@@ -35,11 +35,13 @@ type MonsterUseCaseInterface interface {
 
 	Update(monster *Monster) error
 	Store(monster *Monster) error
-	Delete(name string) error
+
+	DeleteByID(id uuid.UUID) error
+	DeleteByName(name string) error
 }
 
 type MonsterRepositoryInterface interface {
-	GetByID(id string) (*Monster, error)
+	GetByID(id uuid.UUID) (*Monster, error)
 	GetByName(name string) (*Monster, error)
 	GetBySetting(setting string) ([]*Monster, error)
 	GetByMonsterTags(tags []string) ([]*Monster, error)
@@ -48,5 +50,7 @@ type MonsterRepositoryInterface interface {
 
 	Update(monster *Monster) error
 	Store(monster *Monster) error
-	Delete(name string) error
+
+	DeleteByID(id uuid.UUID) error
+	DeleteByName(name string) error
 }
