@@ -14,7 +14,7 @@ func NewMemoryRepository(database map[uuid.UUID]*entities.Monster) entities.Mons
 }
 
 func (r *memoryRepository) GetByID(id uuid.UUID) (*entities.Monster, error) {
-	return nil, nil
+	return r.database[id], nil
 }
 
 func (r *memoryRepository) GetByName(name string) (*entities.Monster, error) {
@@ -42,13 +42,22 @@ func (r *memoryRepository) Update(monster *entities.Monster) error {
 }
 
 func (r *memoryRepository) Store(monster *entities.Monster) error {
+	r.database[monster.ID] = monster
+
 	return nil
 }
 
 func (r *memoryRepository) DeleteByID(id uuid.UUID) error {
+	delete(r.database, id)
+
 	return nil
 }
 
 func (r *memoryRepository) DeleteByName(name string) error {
+	for _, v := range r.database {
+		if v.Name == name {
+			r.DeleteByID(v.ID)
+		}
+	}
 	return nil
 }
