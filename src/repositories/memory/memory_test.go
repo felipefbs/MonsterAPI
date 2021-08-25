@@ -108,3 +108,75 @@ func TestGetByName(t *testing.T) {
 		pretty.Print(diff)
 	}
 }
+
+func TestGetBySetting(t *testing.T) {
+	monsterA := &entities.Monster{
+		ID:        uuid.New(),
+		CreatedAt: time.Now().UTC(),
+		Name:      "Ankheg",
+		Moves: []string{
+			"Undermine the ground",
+			"Burst from the earth",
+			"Spray forth acid, eating away at metal and flesh",
+		},
+
+		Instinct:         "To undermine",
+		Description:      "A hide like plate armor and great crushing mandibles are problematic. A stomach full of acid that can burn a hole through a stone wall makes them all the worse. They’d be bad enough if they were proper insect-sized, but these things have the gall to be as long as any given horse. It’s just not natural! Good thing they tend to stick to one place? Easy for you to say—you don’t have an ankheg living under your corn field. ",
+		Attack:           "Bite",
+		AttackTags:       []string{"Close", " Reach"},
+		Damage:           "d8+1",
+		MonsterTags:      []string{"Group", " Large"},
+		HP:               10,
+		Armor:            3,
+		SpecialQualities: []string{"Burrowing"},
+		Setting:          "Cavern Dwellers",
+		Source:           "core rulebook",
+	}
+
+	monsterB := &entities.Monster{
+		ID:        uuid.New(),
+		CreatedAt: time.Now().UTC(),
+		Name:      "Ankheg",
+		Moves: []string{
+			"Undermine the ground",
+			"Burst from the earth",
+			"Spray forth acid, eating away at metal and flesh",
+		},
+
+		Instinct:         "To undermine",
+		Description:      "A hide like plate armor and great crushing mandibles are problematic. A stomach full of acid that can burn a hole through a stone wall makes them all the worse. They’d be bad enough if they were proper insect-sized, but these things have the gall to be as long as any given horse. It’s just not natural! Good thing they tend to stick to one place? Easy for you to say—you don’t have an ankheg living under your corn field. ",
+		Attack:           "Bite",
+		AttackTags:       []string{"Close", " Reach"},
+		Damage:           "d8+1",
+		MonsterTags:      []string{"Group", " Large"},
+		HP:               10,
+		Armor:            3,
+		SpecialQualities: []string{"Burrowing"},
+		Setting:          "Cavern Dwellers",
+		Source:           "core rulebook",
+	}
+
+	setting := "Cavern Dwellers"
+
+	err := repo.Store(monsterA)
+	if err != nil {
+		t.Error("Create monster A failed", err.Error())
+	}
+
+	err = repo.Store(monsterB)
+	if err != nil {
+		t.Error("Create monster B failed", err.Error())
+	}
+
+	// want := []*entities.Monster{
+	// 	monsterA, monsterB,
+	// }
+	got, err := repo.GetBySetting(setting)
+	if err != nil {
+		t.Error("Get monster by setting failed", err.Error())
+	}
+
+	if got[0].Setting != setting && got[1].Setting != setting {
+		t.Error(got[0].Setting)
+	}
+}
