@@ -28,7 +28,15 @@ func (r *memoryRepository) GetByName(name string) (*entities.Monster, error) {
 }
 
 func (r *memoryRepository) GetBySetting(setting string) ([]*entities.Monster, error) {
-	return nil, nil
+	var data []*entities.Monster
+
+	for _, v := range r.database {
+		if v.Setting == setting {
+			data = append(data, v)
+		}
+	}
+
+	return data, nil
 }
 
 func (r *memoryRepository) GetByMonsterTags(tags []string) ([]*entities.Monster, error) {
