@@ -40,7 +40,19 @@ func (r *memoryRepository) GetBySetting(setting string) ([]*entities.Monster, er
 }
 
 func (r *memoryRepository) GetByMonsterTags(tags []string) ([]*entities.Monster, error) {
-	return nil, nil
+	var data []*entities.Monster
+
+	for _, t := range tags {
+		for _, v := range r.database {
+			for _, mt := range v.MonsterTags {
+				if mt == t {
+					data = append(data, v)
+				}
+			}
+		}
+	}
+
+	return data, nil
 }
 
 func (r *memoryRepository) GetByAttackTags(tags []string) ([]*entities.Monster, error) {
