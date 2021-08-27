@@ -1,6 +1,7 @@
 package memory_test
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
@@ -134,24 +135,19 @@ func TestGetBySetting(t *testing.T) {
 	}
 
 	monsterB := &entities.Monster{
-		ID:        uuid.New(),
-		CreatedAt: time.Now().UTC(),
-		Name:      "Ankheg",
-		Moves: []string{
-			"Undermine the ground",
-			"Burst from the earth",
-			"Spray forth acid, eating away at metal and flesh",
-		},
-
-		Instinct:         "To undermine",
-		Description:      "A hide like plate armor and great crushing mandibles are problematic. A stomach full of acid that can burn a hole through a stone wall makes them all the worse. They’d be bad enough if they were proper insect-sized, but these things have the gall to be as long as any given horse. It’s just not natural! Good thing they tend to stick to one place? Easy for you to say—you don’t have an ankheg living under your corn field. ",
-		Attack:           "Bite",
-		AttackTags:       []string{"Close", " Reach"},
-		Damage:           "d8+1",
-		MonsterTags:      []string{"Group", " Large"},
-		HP:               10,
-		Armor:            3,
-		SpecialQualities: []string{"Burrowing"},
+		ID:               uuid.New(),
+		CreatedAt:        time.Now().UTC(),
+		Name:             "Cave Rat",
+		Moves:            []string{"Swarm", "Rip something (or someone) apart"},
+		Instinct:         "To devour",
+		Description:      "Who hasn’t seen a rat before? It’s like that, but nasty and big and not afraid of you anymore. Maybe this one was a cousin to that one you caught in a trap or the one you killed with a knife in that filthy tavern in Darrow. Maybe he’s looking for a little ratty revenge. ",
+		Attack:           "Gnaw",
+		AttackTags:       []string{"Close", " Messy"},
+		Damage:           "d6  1 piercing",
+		MonsterTags:      []string{"Horde", " Small"},
+		HP:               7,
+		Armor:            1,
+		SpecialQualities: []string{""},
 		Setting:          "Cavern Dwellers",
 		Source:           "core rulebook",
 	}
@@ -168,15 +164,13 @@ func TestGetBySetting(t *testing.T) {
 		t.Error("Create monster B failed", err.Error())
 	}
 
-	// want := []*entities.Monster{
-	// 	monsterA, monsterB,
-	// }
 	got, err := repo.GetBySetting(setting)
 	if err != nil {
 		t.Error("Get monster by setting failed", err.Error())
 	}
-
+	fmt.Println(repo.GetAll())
 	if got[0].Setting != setting && got[1].Setting != setting {
-		t.Error(got[0].Setting)
+		t.Errorf("Wanted monter settings: %s\\But received: %s", setting, got[0].Setting)
+		t.Errorf("Wanted monter settings: %s\\But received: %s", setting, got[1].Setting)
 	}
 }
