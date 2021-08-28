@@ -72,7 +72,13 @@ func (r *memoryRepository) GetByAttackTags(tags []string) ([]*entities.Monster, 
 }
 
 func (r *memoryRepository) GetAll() ([]*entities.Monster, error) {
-	return nil, nil
+	data := make([]*entities.Monster, 0)
+
+	for _, m := range r.database {
+		data = append(data, m)
+	}
+
+	return data, nil
 }
 
 func (r *memoryRepository) Update(monster *entities.Monster) error {
