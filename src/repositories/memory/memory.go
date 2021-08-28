@@ -56,7 +56,19 @@ func (r *memoryRepository) GetByMonsterTags(tags []string) ([]*entities.Monster,
 }
 
 func (r *memoryRepository) GetByAttackTags(tags []string) ([]*entities.Monster, error) {
-	return nil, nil
+	var data []*entities.Monster
+
+	for _, t := range tags {
+		for _, v := range r.database {
+			for _, at := range v.AttackTags {
+				if at == t {
+					data = append(data, v)
+				}
+			}
+		}
+	}
+
+	return data, nil
 }
 
 func (r *memoryRepository) GetAll() ([]*entities.Monster, error) {
