@@ -82,6 +82,8 @@ func (r *memoryRepository) GetAll() ([]*entities.Monster, error) {
 }
 
 func (r *memoryRepository) Update(monster *entities.Monster) error {
+	r.database[monster.ID] = monster
+
 	return nil
 }
 
