@@ -375,3 +375,59 @@ func TestGetAll(t *testing.T) {
 	repo.DeleteByID(monsterA.ID)
 	repo.DeleteByID(monsterB.ID)
 }
+
+func TestUpdate(t *testing.T) {
+	monster := &entities.Monster{
+		ID:               uuid.New(),
+		CreatedAt:        time.Now().UTC(),
+		Name:             "Cave Rat",
+		Moves:            []string{"Swarm", "Rip something (or someone) apart"},
+		Instinct:         "To devour",
+		Description:      "Who hasn’t seen a rat before? It’s like that, but nasty and big and not afraid of you anymore. Maybe this one was a cousin to that one you caught in a trap or the one you killed with a knife in that filthy tavern in Darrow. Maybe he’s looking for a little ratty revenge. ",
+		Attack:           "Gnaw",
+		AttackTags:       []string{"Close", " Messy"},
+		Damage:           "d6  1 piercing",
+		MonsterTags:      []string{"Horde", " Small"},
+		HP:               7,
+		Armor:            1,
+		SpecialQualities: []string{""},
+		Setting:          "Cavern Dwellers",
+		Source:           "core rulebook",
+	}
+
+	err := repo.Store(monster)
+	if err != nil {
+		t.Error("Create monster A failed", err.Error())
+	}
+
+	monsterUpdated := &entities.Monster{
+		ID:               uuid.New(),
+		CreatedAt:        time.Now().UTC(),
+		Name:             "Cave Big Rat",
+		Moves:            []string{"Swarm", "Rip something (or someone) apart"},
+		Instinct:         "To devour",
+		Description:      "Who hasn’t seen a rat before? It’s like that, but nasty and big and not afraid of you anymore. Maybe this one was a cousin to that one you caught in a trap or the one you killed with a knife in that filthy tavern in Darrow. Maybe he’s looking for a little ratty revenge. ",
+		Attack:           "Gnaw",
+		AttackTags:       []string{"Close", " Messy"},
+		Damage:           "d6  1 piercing",
+		MonsterTags:      []string{"Horde", " Small"},
+		HP:               7,
+		Armor:            1,
+		SpecialQualities: []string{""},
+		Setting:          "Cavern Dwellers",
+		Source:           "core rulebook",
+	}
+
+	err = repo.Update(monsterUpdated)
+	if err != nil {
+		t.Error("Create monster A failed", err.Error())
+	}
+
+	want := monsterUpdated.Name
+	got, _ := repo.GetByID(monsterUpdated.ID)
+
+	if got.Name != want {
+		t.Errorf("Wanted monster name: %s, but got: %s", want, got.Name)
+	}
+
+}
