@@ -57,21 +57,7 @@
 
 ## :clipboard: Description
 
-This application, when ready, performs Creation, Reading, Update and Delete in a database based on the monsters from RPG book [Dungeon World](https://dungeon-world.com/). The development of this application is intended to help me learn the [Go language](https://golang.org/).
 
-### Development Todo
-
-- [X]  Hello World at " / " endpoint
-- [X]  Add new routes to "/monsters" endpoint (controller)
-- [X]  Add MVC Pattern (halfway!)
-- [ ]  Configure environment variables
-- [ ]  CRUD operations
-- [X]  Save data in a database - MongoDB
-  - [ ]  (optional) Use CloudAtlas MongoDB
-- [ ]  Dockerize it
-    - [ ]  Create dockerfile
-    - [ ]  docker-compose
-    - [ ]  Create docker-compose file
 
 ## :memo: License
 

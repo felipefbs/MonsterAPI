@@ -1,4 +1,4 @@
-module github.com/felipefbs/MonsterAPI
+module MonsterAPI
 
 go 1.17
 
