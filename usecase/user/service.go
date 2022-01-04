@@ -1,6 +1,11 @@
 package user
 
-import "github.com/felipefbs/MonsterAPI/entity"
+import (
+	"errors"
+	"time"
+
+	"github.com/felipefbs/MonsterAPI/entity"
+)
 
 type Service struct {
 	repo Repository
@@ -27,5 +32,14 @@ func (s *Service) StoreUser(email, password, nickname string) (entity.ID, error)
 	return e.ID, s.repo.Store(e)
 }
 
-func (s *Service) UpdateUser(user *entity.User) error { return nil }
-func (s *Service) DeleteUser(id entity.ID) error      { return nil }
+func (s *Service) UpdateUser(user *entity.User) error {
+	if err := user.Validate(); err != nil {
+		return errors.New("invalid entity")
+	}
+
+	user.UpdatedAt = time.Now()
+
+	return s.repo.Update(user)
+}
+
+func (s *Service) DeleteUser(id entity.ID) error { return nil }
