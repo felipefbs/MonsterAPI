@@ -1,6 +1,7 @@
 package user_test
 
 import (
+	"errors"
 	"testing"
 	"time"
 
@@ -87,4 +88,29 @@ func Test_Update(t *testing.T) {
 
 	_, err = service.GetUser(entity.NilID)
 	assert.NotNil(t, err)
+}
+
+func Test_Delete(t *testing.T) {
+	repo := user.NewMemoryRepository()
+	service := user.NewService(repo)
+
+	u1 := newFixtureUser()
+	u2 := newFixtureUser()
+	u2ID, _ := service.StoreUser(u2.Email, u2.Password, u2.Nickname)
+
+	err := service.DeleteUser(u1.ID)
+	assert.Equal(t, errors.New("user not found"), err)
+
+	err = service.DeleteUser(u2ID)
+	assert.Nil(t, err)
+	_, err = service.GetUser(u2ID)
+	assert.Equal(t, errors.New("not found"), err)
+
+	u3 := newFixtureUser()
+	id, _ := service.StoreUser(u3.Email, u3.Password, u3.Nickname)
+	savedUser, _ := service.GetUser(id)
+	savedUser.Monsters = []entity.ID{entity.NewID()}
+	_ = service.UpdateUser(savedUser)
+	err = service.DeleteUser(id)
+	assert.Equal(t, errors.New("cannot be deleted"), err)
 }
