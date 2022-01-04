@@ -66,3 +66,25 @@ func Test_SearchAndFind(t *testing.T) {
 		assert.Equal(t, 2, len(all))
 	})
 }
+
+func Test_Update(t *testing.T) {
+	repo := user.NewMemoryRepository()
+	service := user.NewService(repo)
+
+	user := newFixtureUser()
+	id, err := service.StoreUser(user.Email, user.Password, user.Nickname)
+	assert.Nil(t, err)
+
+	savedUser, _ := service.GetUser(id)
+	savedUser.Nickname = "felipefbs"
+
+	err = service.UpdateUser(savedUser)
+	assert.Nil(t, err)
+
+	updatedUser, err := service.GetUser(id)
+	assert.Nil(t, err)
+	assert.Equal(t, "felipefbs", updatedUser.Nickname)
+
+	_, err = service.GetUser(entity.NilID)
+	assert.NotNil(t, err)
+}
