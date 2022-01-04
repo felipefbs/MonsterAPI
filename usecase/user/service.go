@@ -10,8 +10,13 @@ func NewService(repo Repository) UseCase {
 	return &Service{repo: repo}
 }
 
-func (s *Service) GetUser(id entity.ID) (*entity.User, error) { return &entity.User{}, nil }
-func (s *Service) GetAllUsers() ([]*entity.User, error)       { return []*entity.User{}, nil }
+func (s *Service) GetUser(id entity.ID) (*entity.User, error) {
+	return s.repo.Get(id)
+}
+
+func (s *Service) GetAllUsers() ([]*entity.User, error) {
+	return s.repo.GetAll()
+}
 
 func (s *Service) StoreUser(email, password, nickname string) (entity.ID, error) {
 	e, err := entity.NewUser(email, password, nickname)
@@ -19,11 +24,7 @@ func (s *Service) StoreUser(email, password, nickname string) (entity.ID, error)
 		return entity.NilID, err
 	}
 
-	if err = s.repo.Store(e); err != nil {
-		return entity.NilID, err
-	}
-
-	return e.ID, nil
+	return e.ID, s.repo.Store(e)
 }
 
 func (s *Service) UpdateUser(user *entity.User) error { return nil }
