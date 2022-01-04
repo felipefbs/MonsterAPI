@@ -19,9 +19,11 @@ type User struct {
 
 func NewUser(email, password, nickname string) (*User, error) {
 	u := &User{
-		ID:       NewID(),
-		Email:    email,
-		Nickname: nickname,
+		ID:        NewID(),
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+		Email:     email,
+		Nickname:  nickname,
 	}
 
 	pwd, err := hashPassword(password)
