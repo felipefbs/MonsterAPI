@@ -42,4 +42,17 @@ func (s *Service) UpdateUser(user *entity.User) error {
 	return s.repo.Update(user)
 }
 
-func (s *Service) DeleteUser(id entity.ID) error { return nil }
+func (s *Service) DeleteUser(id entity.ID) error {
+	u, err := s.GetUser(id)
+	if u == nil {
+		return errors.New("user not found")
+	}
+	if err != nil {
+		return err
+	}
+	if len(u.Monsters) > 0 {
+		return errors.New("cannot be deleted")
+	}
+
+	return s.repo.Delete(id)
+}
