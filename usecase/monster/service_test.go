@@ -60,11 +60,17 @@ func Test_SearchAndFind(t *testing.T) {
 	_, err = service.StoreMonster(u.Name, u.Moves, u.Instinct, u.Description, u.Attack, u.AttackTags, u.Damage, u.MonsterTags, u.HP, u.Armor, u.SpecialQualities, u.Setting, u.Source)
 	assert.Nil(t, err)
 
-	t.Run("Get one monster", func(t *testing.T) {
+	t.Run("Get monster by id", func(t *testing.T) {
 		savedMonster, err := service.GetMonsterByID(savedID)
 
 		assert.Nil(t, err)
 		assert.Equal(t, u.Name, savedMonster.Name)
+	})
+
+	t.Run("Get monster by name", func(t *testing.T) {
+		_, err := service.GetMonsterByName(u.Name)
+
+		assert.Nil(t, err)
 	})
 
 	t.Run("Get all monsters", func(t *testing.T) {
