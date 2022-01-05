@@ -91,11 +91,25 @@ func Test_SearchAndFind(t *testing.T) {
 		allMonsters, err := service.GetMonsterBySetting(u.Setting)
 
 		assert.Nil(t, err)
-		assert.Equal(t, len(allMonsters), 2)
+		assert.Equal(t, 2, len(allMonsters))
 	})
 
 	t.Run("Get monsters by setting that do not exist", func(t *testing.T) {
 		_, err := service.GetMonsterBySetting("none")
+
+		assert.NotNil(t, err)
+		assert.Equal(t, entity.ErrNotFound, err)
+	})
+
+	t.Run("Get monster by tags", func(t *testing.T) {
+		allMonsters, err := service.GetMonsterByMonsterTags(u.MonsterTags)
+
+		assert.Nil(t, err)
+		assert.Equal(t, 2, len(allMonsters))
+	})
+
+	t.Run("Get monster by tags that do not exist", func(t *testing.T) {
+		_, err := service.GetMonsterByMonsterTags([]string{})
 
 		assert.NotNil(t, err)
 		assert.Equal(t, entity.ErrNotFound, err)
