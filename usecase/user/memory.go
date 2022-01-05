@@ -57,7 +57,7 @@ func (r *memoryRepository) Delete(id entity.ID) error {
 		return err
 	}
 
-	r.database[id] = nil
+	delete(r.database, id)
 
 	return nil
 }
