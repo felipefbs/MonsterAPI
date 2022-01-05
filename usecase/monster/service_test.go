@@ -1,6 +1,7 @@
 package monster_test
 
 import (
+	"errors"
 	"testing"
 	"time"
 
@@ -71,6 +72,20 @@ func Test_SearchAndFind(t *testing.T) {
 		_, err := service.GetMonsterByName(u.Name)
 
 		assert.Nil(t, err)
+	})
+
+	t.Run("Get monsters by setting", func(t *testing.T) {
+		allMonsters, err := service.GetMonsterBySetting(u.Setting)
+
+		assert.Nil(t, err)
+		assert.Equal(t, len(allMonsters), 2)
+	})
+
+	t.Run("Get monsters by setting that do not exist", func(t *testing.T) {
+		_, err := service.GetMonsterBySetting("none")
+
+		assert.NotNil(t, err)
+		assert.Equal(t, errors.New("not found"), err)
 	})
 
 	t.Run("Get all monsters", func(t *testing.T) {
