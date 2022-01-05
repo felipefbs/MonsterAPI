@@ -136,3 +136,22 @@ func Test_SearchAndFind(t *testing.T) {
 		assert.Equal(t, len(allMonsters), 2)
 	})
 }
+
+func Test_Update(t *testing.T) {
+	repo := monster.NewMemoryRepository()
+	service := monster.NewService(repo)
+
+	m := newFixtureMonster()
+	id, err := service.StoreMonster(m.Name, m.Moves, m.Instinct, m.Description, m.Attack, m.AttackTags, m.Damage, m.MonsterTags, m.HP, m.Armor, m.SpecialQualities, m.Setting, m.Source)
+	assert.Nil(t, err)
+
+	savedMonster, _ := service.GetMonsterByID(id)
+	savedMonster.Armor = 5
+
+	err = service.UpdateMonster(savedMonster)
+	assert.Nil(t, err)
+
+	updateMonster, err := service.GetMonsterByID(id)
+	assert.Nil(t, err)
+	assert.Equal(t, updateMonster.Armor, int32(5))
+}
