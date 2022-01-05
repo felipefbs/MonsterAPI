@@ -13,7 +13,7 @@ type Repository interface {
 }
 
 type UseCase interface {
-	GetMonsterByID(id string) (*entity.Monster, error)
+	GetMonsterByID(id entity.ID) (*entity.Monster, error)
 	GetMonsterByName(name string) (*entity.Monster, error)
 	GetMonsterBySetting(setting string) ([]*entity.Monster, error)
 	GetMonsterByMonsterTags(tags []string) ([]*entity.Monster, error)
