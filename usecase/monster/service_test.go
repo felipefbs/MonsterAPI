@@ -68,10 +68,24 @@ func Test_SearchAndFind(t *testing.T) {
 		assert.Equal(t, u.Name, savedMonster.Name)
 	})
 
+	t.Run("Get monster by id testing do not exist", func(t *testing.T) {
+		_, err := service.GetMonsterByID(entity.NilID)
+
+		assert.NotNil(t, err)
+		assert.Equal(t, errors.New("not found"), err)
+	})
+
 	t.Run("Get monster by name", func(t *testing.T) {
 		_, err := service.GetMonsterByName(u.Name)
 
 		assert.Nil(t, err)
+	})
+
+	t.Run("Get monster by name that do not exist", func(t *testing.T) {
+		_, err := service.GetMonsterByName("None")
+
+		assert.NotNil(t, err)
+		assert.Equal(t, errors.New("not found"), err)
 	})
 
 	t.Run("Get monsters by setting", func(t *testing.T) {
