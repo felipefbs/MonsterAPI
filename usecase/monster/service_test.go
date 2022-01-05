@@ -155,3 +155,38 @@ func Test_Update(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, updateMonster.Armor, int32(5))
 }
+
+func Test_Delete(t *testing.T) {
+	repo := monster.NewMemoryRepository()
+	service := monster.NewService(repo)
+
+	t.Run("Delete monster by id", func(t *testing.T) {
+		m := newFixtureMonster()
+		err := service.DeleteMonsterByID(m.ID)
+		assert.Equal(t, entity.ErrNotFound, err)
+
+		id, err := service.StoreMonster(m.Name, m.Moves, m.Instinct, m.Description, m.Attack, m.AttackTags, m.Damage, m.MonsterTags, m.HP, m.Armor, m.SpecialQualities, m.Setting, m.Source)
+		assert.Nil(t, err)
+
+		err = service.DeleteMonsterByID(id)
+		assert.Nil(t, err)
+
+		_, err = service.GetMonsterByID(id)
+		assert.Equal(t, entity.ErrNotFound, err)
+	})
+
+	t.Run("Delete monster by name", func(t *testing.T) {
+		m := newFixtureMonster()
+		err := service.DeleteMonsterByName(m.Name)
+		assert.Equal(t, entity.ErrNotFound, err)
+
+		id, err := service.StoreMonster(m.Name, m.Moves, m.Instinct, m.Description, m.Attack, m.AttackTags, m.Damage, m.MonsterTags, m.HP, m.Armor, m.SpecialQualities, m.Setting, m.Source)
+		assert.Nil(t, err)
+
+		err = service.DeleteMonsterByName(m.Name)
+		assert.Nil(t, err)
+
+		_, err = service.GetMonsterByID(id)
+		assert.Equal(t, entity.ErrNotFound, err)
+	})
+}
