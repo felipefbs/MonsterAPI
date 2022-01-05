@@ -39,13 +39,13 @@ func Test_Store(t *testing.T) {
 	repo := monster.NewMemoryRepository()
 	service := monster.NewService(repo)
 
-	u := newFixtureMonster()
+	m := newFixtureMonster()
 
-	_, err := service.StoreMonster(u.Name, u.Moves, u.Instinct, u.Description, u.Attack, u.AttackTags, u.Damage, u.MonsterTags, u.HP, u.Armor, u.SpecialQualities, u.Setting, u.Source)
+	_, err := service.StoreMonster(m.Name, m.Moves, m.Instinct, m.Description, m.Attack, m.AttackTags, m.Damage, m.MonsterTags, m.HP, m.Armor, m.SpecialQualities, m.Setting, m.Source)
 	assert.Nil(t, err)
 
-	u = &entity.Monster{}
-	_, err = service.StoreMonster(u.Name, u.Moves, u.Instinct, u.Description, u.Attack, u.AttackTags, u.Damage, u.MonsterTags, u.HP, u.Armor, u.SpecialQualities, u.Setting, u.Source)
+	m = &entity.Monster{}
+	_, err = service.StoreMonster(m.Name, m.Moves, m.Instinct, m.Description, m.Attack, m.AttackTags, m.Damage, m.MonsterTags, m.HP, m.Armor, m.SpecialQualities, m.Setting, m.Source)
 	assert.NotNil(t, err)
 }
 
@@ -53,18 +53,18 @@ func Test_SearchAndFind(t *testing.T) {
 	repo := monster.NewMemoryRepository()
 	service := monster.NewService(repo)
 
-	u := newFixtureMonster()
+	m := newFixtureMonster()
 
-	savedID, err := service.StoreMonster(u.Name, u.Moves, u.Instinct, u.Description, u.Attack, u.AttackTags, u.Damage, u.MonsterTags, u.HP, u.Armor, u.SpecialQualities, u.Setting, u.Source)
+	savedID, err := service.StoreMonster(m.Name, m.Moves, m.Instinct, m.Description, m.Attack, m.AttackTags, m.Damage, m.MonsterTags, m.HP, m.Armor, m.SpecialQualities, m.Setting, m.Source)
 	assert.Nil(t, err)
-	_, err = service.StoreMonster(u.Name, u.Moves, u.Instinct, u.Description, u.Attack, u.AttackTags, u.Damage, u.MonsterTags, u.HP, u.Armor, u.SpecialQualities, u.Setting, u.Source)
+	_, err = service.StoreMonster(m.Name, m.Moves, m.Instinct, m.Description, m.Attack, m.AttackTags, m.Damage, m.MonsterTags, m.HP, m.Armor, m.SpecialQualities, m.Setting, m.Source)
 	assert.Nil(t, err)
 
 	t.Run("Get monster by id", func(t *testing.T) {
 		savedMonster, err := service.GetMonsterByID(savedID)
 
 		assert.Nil(t, err)
-		assert.Equal(t, u.Name, savedMonster.Name)
+		assert.Equal(t, m.Name, savedMonster.Name)
 	})
 
 	t.Run("Get monster by id testing do not exist", func(t *testing.T) {
@@ -75,7 +75,7 @@ func Test_SearchAndFind(t *testing.T) {
 	})
 
 	t.Run("Get monster by name", func(t *testing.T) {
-		_, err := service.GetMonsterByName(u.Name)
+		_, err := service.GetMonsterByName(m.Name)
 
 		assert.Nil(t, err)
 	})
@@ -88,7 +88,7 @@ func Test_SearchAndFind(t *testing.T) {
 	})
 
 	t.Run("Get monsters by setting", func(t *testing.T) {
-		allMonsters, err := service.GetMonsterBySetting(u.Setting)
+		allMonsters, err := service.GetMonsterBySetting(m.Setting)
 
 		assert.Nil(t, err)
 		assert.Equal(t, 2, len(allMonsters))
@@ -102,7 +102,7 @@ func Test_SearchAndFind(t *testing.T) {
 	})
 
 	t.Run("Get monster by tags", func(t *testing.T) {
-		allMonsters, err := service.GetMonsterByMonsterTags(u.MonsterTags)
+		allMonsters, err := service.GetMonsterByMonsterTags(m.MonsterTags)
 
 		assert.Nil(t, err)
 		assert.Equal(t, 2, len(allMonsters))
@@ -110,6 +110,20 @@ func Test_SearchAndFind(t *testing.T) {
 
 	t.Run("Get monster by tags that do not exist", func(t *testing.T) {
 		_, err := service.GetMonsterByMonsterTags([]string{})
+
+		assert.NotNil(t, err)
+		assert.Equal(t, entity.ErrNotFound, err)
+	})
+
+	t.Run("Get monster by attack tags", func(t *testing.T) {
+		allMonsters, err := service.GetMonsterByAttackTags(m.AttackTags)
+
+		assert.Nil(t, err)
+		assert.Equal(t, 2, len(allMonsters))
+	})
+
+	t.Run("Get monster by attack tags that do not exist", func(t *testing.T) {
+		_, err := service.GetMonsterByAttackTags([]string{})
 
 		assert.NotNil(t, err)
 		assert.Equal(t, entity.ErrNotFound, err)
