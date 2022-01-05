@@ -55,7 +55,25 @@ func (s *Service) StoreMonster(
 	setting string,
 	source string,
 ) (entity.ID, error) {
-	return entity.NilID, nil
+	m, err := entity.NewMonster(name,
+		moves,
+		instinct,
+		description,
+		attack,
+		attackTags,
+		damage,
+		monsterTags,
+		hp,
+		armor,
+		specialQualities,
+		setting,
+		source)
+	if err != nil {
+		return entity.NilID, err
+	}
+	s.repo.Store(m)
+
+	return m.ID, err
 }
 
 func (s *Service) DeleteMonsterByID(id entity.ID) error {
