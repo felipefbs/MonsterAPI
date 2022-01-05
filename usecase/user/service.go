@@ -1,7 +1,6 @@
 package user
 
 import (
-	"errors"
 	"time"
 
 	"github.com/felipefbs/MonsterAPI/entity"
@@ -38,7 +37,7 @@ func (s *Service) StoreUser(email, password, nickname string) (entity.ID, error)
 
 func (s *Service) UpdateUser(user *entity.User) error {
 	if err := user.Validate(); err != nil {
-		return errors.New("invalid entity")
+		return entity.ErrInvalidEnt
 	}
 
 	user.UpdatedAt = time.Now()
@@ -49,13 +48,13 @@ func (s *Service) UpdateUser(user *entity.User) error {
 func (s *Service) DeleteUser(id entity.ID) error {
 	u, err := s.GetUser(id)
 	if u == nil {
-		return errors.New("user not found")
+		return entity.ErrNotFound
 	}
 	if err != nil {
 		return err
 	}
 	if len(u.Monsters) > 0 {
-		return errors.New("cannot be deleted")
+		return entity.ErrCantDelete
 	}
 
 	return s.repo.Delete(id)

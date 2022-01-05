@@ -1,7 +1,6 @@
 package entity
 
 import (
-	"errors"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -42,7 +41,7 @@ func NewUser(email, password, nickname string) (*User, error) {
 
 func (u *User) Validate() error {
 	if u.Email == "" || u.Password == "" || u.Nickname == "" {
-		return errors.New("invalid entity")
+		return ErrInvalidEnt
 	}
 
 	return nil
@@ -70,7 +69,7 @@ func (u *User) GetMonster(id ID) (ID, error) {
 		}
 	}
 
-	return id, errors.New("not found")
+	return id, ErrNotFound
 }
 
 func (u *User) RemoveMonster(id ID) error {
@@ -82,5 +81,5 @@ func (u *User) RemoveMonster(id ID) error {
 		}
 	}
 
-	return errors.New("not found")
+	return ErrNotFound
 }

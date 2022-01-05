@@ -1,7 +1,6 @@
 package entity
 
 import (
-	"errors"
 	"time"
 )
 
@@ -80,7 +79,7 @@ func (m Monster) Validate() error {
 		m.SpecialQualities == nil ||
 		m.Setting == "" ||
 		m.Source == "" {
-		return errors.New("invalid entity")
+		return ErrInvalidEnt
 	}
 	return nil
 }

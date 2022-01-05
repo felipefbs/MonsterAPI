@@ -1,8 +1,6 @@
 package user
 
 import (
-	"errors"
-
 	"github.com/felipefbs/MonsterAPI/entity"
 	"github.com/google/uuid"
 )
@@ -18,7 +16,7 @@ func NewMemoryRepository() Repository {
 
 func (r *memoryRepository) Get(id entity.ID) (*entity.User, error) {
 	if r.database[id] == nil {
-		return nil, errors.New("not found")
+		return nil, entity.ErrNotFound
 	}
 
 	return r.database[id], nil
@@ -65,7 +63,7 @@ func (r *memoryRepository) Delete(id entity.ID) error {
 func (r *memoryRepository) CheckEmail(email string) error {
 	for _, user := range r.database {
 		if user.Email == email {
-			return errors.New("invalid email")
+			return entity.ErrInvalidEmail
 		}
 	}
 
