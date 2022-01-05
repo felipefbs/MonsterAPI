@@ -53,6 +53,13 @@ func Test_SearchAndFind(t *testing.T) {
 	repo := monster.NewMemoryRepository()
 	service := monster.NewService(repo)
 
+	t.Run("Get all monsters with empty database", func(t *testing.T) {
+		allMonsters, err := service.GetAllMonster()
+
+		assert.NotNil(t, err)
+		assert.Equal(t, len(allMonsters), 0)
+	})
+
 	m := newFixtureMonster()
 
 	savedID, err := service.StoreMonster(m.Name, m.Moves, m.Instinct, m.Description, m.Attack, m.AttackTags, m.Damage, m.MonsterTags, m.HP, m.Armor, m.SpecialQualities, m.Setting, m.Source)
@@ -146,6 +153,12 @@ func Test_Update(t *testing.T) {
 	assert.Nil(t, err)
 
 	savedMonster, _ := service.GetMonsterByID(id)
+	savedMonster.Armor = -1
+
+	err = service.UpdateMonster(savedMonster)
+	assert.NotNil(t, err)
+	assert.Equal(t, err, entity.ErrInvalidEnt)
+
 	savedMonster.Armor = 5
 
 	err = service.UpdateMonster(savedMonster)
@@ -154,6 +167,9 @@ func Test_Update(t *testing.T) {
 	updateMonster, err := service.GetMonsterByID(id)
 	assert.Nil(t, err)
 	assert.Equal(t, updateMonster.Armor, int32(5))
+
+	err = service.UpdateMonster(&entity.Monster{})
+	assert.NotNil(t, err)
 }
 
 func Test_Delete(t *testing.T) {
