@@ -6,6 +6,10 @@ import (
 
 type Repository interface {
 	Get(id entity.ID) (*entity.Monster, error)
+	GetByName(name string) (*entity.Monster, error)
+	GetBySetting(setting string) ([]*entity.Monster, error)
+	GetByMonsterTags(tags []string) ([]*entity.Monster, error)
+	GetByAttackTags(tags []string) ([]*entity.Monster, error)
 	GetAll() ([]*entity.Monster, error)
 	Store(user *entity.Monster) error
 	Update(user *entity.Monster) error
