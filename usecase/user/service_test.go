@@ -31,6 +31,10 @@ func Test_Store(t *testing.T) {
 	_, err := service.StoreUser(u.Email, u.Password, u.Nickname)
 	assert.Nil(t, err)
 
+	// Checking duplicated email
+	_, err = service.StoreUser(u.Email, u.Password, u.Nickname)
+	assert.NotNil(t, err)
+
 	// Check if user is not created while passing only empty fields
 	_, err = service.StoreUser("", "", "")
 	assert.NotNil(t, err)
@@ -42,19 +46,19 @@ func Test_SearchAndFind(t *testing.T) {
 
 	u1 := newFixtureUser()
 	u2 := newFixtureUser()
-	u2.Nickname = "Bono Vox"
+	u2.Email = "bono.vox@email.com"
 
 	uID, _ := service.StoreUser(u1.Email, u1.Password, u1.Nickname)
-	_, _ = service.StoreUser(u1.Email, u1.Password, u1.Nickname)
+	_, _ = service.StoreUser(u2.Email, u2.Password, u2.Nickname)
 
-	t.Run("Get one user", func(t *testing.T) {
+	t.Run("Get an user by id", func(t *testing.T) {
 		savedUser, err := service.GetUser(uID)
 
 		assert.Nil(t, err)
 		assert.Equal(t, u1.Nickname, savedUser.Nickname)
 	})
 
-	t.Run("Get an user that do not exist", func(t *testing.T) {
+	t.Run("Get an user that id do not exist", func(t *testing.T) {
 		_, err := service.GetUser(entity.NilID)
 
 		assert.NotNil(t, err)

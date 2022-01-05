@@ -8,6 +8,7 @@ type Repository interface {
 	Store(user *entity.User) error
 	Update(user *entity.User) error
 	Delete(id entity.ID) error
+	CheckEmail(email string) error
 }
 
 type UseCase interface {

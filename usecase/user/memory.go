@@ -61,3 +61,13 @@ func (r *memoryRepository) Delete(id entity.ID) error {
 
 	return nil
 }
+
+func (r *memoryRepository) CheckEmail(email string) error {
+	for _, user := range r.database {
+		if user.Email == email {
+			return errors.New("invalid email")
+		}
+	}
+
+	return nil
+}

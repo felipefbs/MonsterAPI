@@ -24,6 +24,10 @@ func (s *Service) GetAllUsers() ([]*entity.User, error) {
 }
 
 func (s *Service) StoreUser(email, password, nickname string) (entity.ID, error) {
+	if err := s.repo.CheckEmail(email); err != nil {
+		return entity.NilID, err
+	}
+
 	e, err := entity.NewUser(email, password, nickname)
 	if err != nil {
 		return entity.NilID, err
