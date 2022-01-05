@@ -48,3 +48,20 @@ func Test_Store(t *testing.T) {
 	_, err = service.StoreMonster(u.Name, u.Moves, u.Instinct, u.Description, u.Attack, u.AttackTags, u.Damage, u.MonsterTags, u.HP, u.Armor, u.SpecialQualities, u.Setting, u.Source)
 	assert.NotNil(t, err)
 }
+
+func Test_SearchAndFind(t *testing.T) {
+	repo := monster.NewMemoryRepository()
+	service := monster.NewService(repo)
+
+	u := newFixtureMonster()
+
+	savedID, err := service.StoreMonster(u.Name, u.Moves, u.Instinct, u.Description, u.Attack, u.AttackTags, u.Damage, u.MonsterTags, u.HP, u.Armor, u.SpecialQualities, u.Setting, u.Source)
+	assert.Nil(t, err)
+
+	t.Run("Get one monster", func(t *testing.T) {
+		savedMonster, err := service.GetMonsterByID(savedID)
+
+		assert.Nil(t, err)
+		assert.Equal(t, u.Name, savedMonster.Name)
+	})
+}
